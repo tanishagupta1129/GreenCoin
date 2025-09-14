@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Coin - Login</title>
+    <link rel="stylesheet" href="{% static 'mainapp/css/login.css' %}">
+
+    <style>
+        .alert {
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin: 20px auto;
+            width: 80%;
+            text-align: center;
+            font-size: 17px;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="{% static 'mainapp/images/logo.png' %}" alt="Green Coin Logo" style="width:50px;height:50px;border-radius:100%;"> 
+            <span>Green Coin</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'submit_proof' %}">Submit Proof</a></li>
+                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                <li><a href="{% url 'reward' %}">Rewards</a></li>
+                <li><a href="{% url 'awareness' %}">Eco Benefits</a></li>
+                {% if not request.session.user_id %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <div class="logo">
+            <a href="{% url 'profile' %}">
+                <img src="{% static 'mainapp/images/profile.png' %}" alt="Profile" style="width:40px; height:40px; border-radius:100%;">
+            </a>
+        </div>
+    </header>
+
+    <section class="login-section">
+        <div class="login-box">
+            <img src="{% static 'mainapp/images/logo.png' %}" alt="Logo" style="width:40px; height:40px; border-radius:100%;">
+            <h2>Login to Green Coin</h2>
+
+            {% if error %}
+                <div class="alert alert-error">{{ error }}</div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form  action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="password">Password:</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" required>
+                    <button type="button" id="togglePassword" style="position: absolute; right: 20px; top: 10px; background: none; border: none; cursor: pointer;">Show</button>
+                </div>
+
+                <button type="submit">Login</button>
+                <p class="signup-link">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+            </form>
+        </div>
+    </section>
+
+    <div id="Footer">
+        <img src="{% static 'mainapp/images/logo.png' %}" alt="Footer Logo" class="footer-logo" style="width:40px; height:40px; border-radius:100%;">  
+        <p><i>"Nature Rewards Those Who Care!"</i></p>
+        <p>Contact us at: <a href="mailto:greencoin.support@example.com">greencoin.support@example.com</a></p>
+        <p>&copy; 2025 Green Coin. All rights reserved.</p>
+    </div>
+<script>
+    // ✅ Show/Hide Password Toggle
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+
+        toggleBtn.addEventListener("click", function () {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            toggleBtn.textContent = isPassword ? "Hide" : "Show";
+        });
+    });
+</script>
+
+    <script src="{% static 'mainapp/js/signup.js' %}"></script>
+
+</body>
+</html>

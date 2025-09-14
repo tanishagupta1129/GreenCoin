@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Submit Proof - Green Coin</title>
+    <link rel="stylesheet" href="{% static 'mainapp/css/proof_sub.css' %}">
+    <style>
+        .preview-img {
+            max-height: 100px;
+            margin: 8px 0;
+            display: none;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+function closeCustomAlert() {
+    document.getElementById('custom-alert-overlay').style.display = 'none';
+}
+</script>
+
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="{% static 'mainapp/images/logo.png' %}" alt="Green Coin Logo" style="width:50px;height:50px;border-radius: 100%;">
+        <span>Green Coin</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            {% if request.session.user_email %}
+                <li><a href="{% url 'submit_proof' %}">Submit Proof</a></li>
+                <li><a href="{% url 'leaderboard' %}">Leaderboard</a></li>
+                <li><a href="{% url 'reward' %}">Rewards</a></li>
+                <li><a href="{% url 'awareness' %}">Eco Benefits</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="logo">
+        <a href="{% url 'profile' %}">
+            <img src="{% static 'mainapp/images/profile.png' %}" alt="Profile" style="width:40px; height:40px; border-radius:100%;">
+        </a>
+    </div>
+</header>
+
+<section class="hero-section">
+    <h4>“This path leads to change.<br> One step today, a better greener planet tomorrow.”</h4>
+    
+</section>
+{% if messages %}
+    <div id="custom-alert-overlay">
+        <div class="custom-alert-box">
+            {% for message in messages %}
+                <p class="alert-message {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+            <button onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+{% endif %}
+
+<section class="submit-section">
+    <div class="submit-box">
+        <h2>Submit Your Green Activity</h2>
+
+
+        <form id="proofForm" action="{% url 'submit_proof' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="activity">Select Activity:</label>
+            {{ form.activity_type }}
+            {% if form.activity_type.errors %}
+                <div class="error">{{ form.activity_type.errors.0 }}</div>
+            {% endif %}
+
+            <p class="proof-instruction">📷 Upload Proof (Photo only — live camera required):</p>
+
+            <div id="planting-steps" style="display: none;">
+                <label>📍 Step 1: Upload photo of digging/sowing</label>
+                <input type="file" name="image_action" accept="image/*" capture="environment" id="image_action">
+                <img id="preview_action" class="preview-img" />
+
+                <label>📍 Step 2: Upload photo after planting</label>
+                <input type="file" name="image_after_planting" accept="image/*" capture="environment" id="image_after_planting">
+                <img id="preview_after" class="preview-img" />
+            </div>
+
+            <div id="proof-field">
+                <label for="proof_image">Upload Proof Image:</label>
+                {{ form.proof_image }}
+                <img id="preview_proof" class="preview-img" />
+                {% if form.proof_image.errors %}
+                    <div class="error">{{ form.proof_image.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <label for="description">Additional Description (optional):</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="error">{{ form.description.errors.0 }}</div>
+            {% endif %}
+
+            <button type="submit">Submit Proof</button>
+        </form>
+    </div>
+</section>
+
+<div id="Footer">
+    <img src="{% static 'mainapp/images/logo.png' %}" alt="Green Coin Logo" class="footer-logo" style="width:40px; height:40px; border-radius:100%;">
+    <p><i>"Nature Rewards Those Who Care!"</i></p>
+    <p>Contact us at: <a href="mailto:greencoin.support@example.com">greencoin.support@example.com</a></p>
+    <p>&copy; 2025 Green Coin. All rights reserved.</p>
+</div>
+
+<!-- Load External JS -->
+<script src="{% static 'mainapp/js/proof_sub.js' %}"></script>
+
+</body>
+</html>
